@@ -22,4 +22,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private String role;
+    private boolean verified;
+    private String verificationCode;
+
 }

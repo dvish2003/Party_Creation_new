@@ -6,35 +6,45 @@
     <title>Sign Up - ForeverFloral</title>
     <link rel="stylesheet" href="../Stylesheet/register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
 <div class="container" id="container">
-
-    <div class="form-container sign-up ">
+    <div class="form-container sign-up">
         <form id="registerForm">
             <h1 class="title">Sign Up</h1>
             <div class="input-field">
                 <i class="fas fa-user"></i>
-                <label for="usernameU"></label><input type="text" placeholder="Username" name="usernameU" id="usernameU" required>
+                <label for="usernameU"></label>
+                <input type="text" placeholder="Username" name="usernameU" id="usernameU" required>
             </div>
             <div class="input-field">
                 <i class="fas fa-envelope"></i>
-                <label for="emailU"></label><input type="email" placeholder="Email" name="emailU" id="emailU" required>
+                <label for="emailU"></label>
+                <input type="email" placeholder="Email" name="emailU" id="emailU" required>
             </div>
             <div class="input-field">
                 <i class="fas fa-lock"></i>
-                <label for="passwordU"></label><input type="password" placeholder="Password" name="passwordU" id="passwordU" required>
+                <label for="passwordU"></label>
+                <input type="password" placeholder="Password" name="passwordU" id="passwordU" required>
             </div>
             <div class="input-field">
                 <i class="fas fa-lock"></i>
-                <label for="confirmPasswordU"></label><input type="password" placeholder="Confirm Password" name="confirmPasswordU" id="confirmPasswordU" required>
+                <label for="confirmPasswordU"></label>
+                <input type="password" placeholder="Confirm Password" name="confirmPasswordU" id="confirmPasswordU" required>
             </div>
             <div class="input-field">
                 <i class="fas fa-user"></i>
-                <label for="role"></label><input type="text" placeholder="User Or Admin" name="role" id="role" required>
+                <label for="role"></label>
+                <select name="role" id="role" class="form-select" required>
+                    <option value="">Select Role</option>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
             </div>
-            <button type="submit" class="btn" onclick="registerButton()">Sign up</button>
+            <button type="submit" class="btn">Sign up</button>
             <p class="social-text">Or Sign up with social platform</p>
             <div class="social-media">
                 <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
@@ -45,17 +55,19 @@
         </form>
     </div>
     <div class="form-container sign-in active">
-        <form>
+        <form id="loginForm">
             <h1 class="title">Sign In</h1>
             <div class="input-field">
                 <i class="fas fa-user"></i>
-                <label for="emailI"></label><input type="text" placeholder="Email" name="email" id="emailI" required>
+                <label for="emailI"></label>
+                <input type="text" placeholder="Email" name="email" id="emailI" required>
             </div>
             <div class="input-field">
                 <i class="fas fa-lock"></i>
-                <label for="passwordI"></label><input type="password" placeholder="Password" name="password" id="passwordI" required>
+                <label for="passwordI"></label>
+                <input type="password" placeholder="Password" name="password" id="passwordI" required>
             </div>
-            <input type="submit" value="Sign in" class="btn" id="loginBtn">
+            <button type="submit" class="btn">Sign in</button>
             <p class="social-text">Or Sign in with social platform</p>
             <div class="social-media">
                 <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
@@ -64,6 +76,29 @@
                 <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </form>
+    </div>
+
+    <!-- Verification Modal -->
+    <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel"
+         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary text-white">
+                    <h5 class="modal-title" id="verificationModalLabel">A verification email has been sent to your email. Check your mail Box</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="verifyForm">
+                        <div class="mb-4">
+                            <label for="otp" class="form-label fw-bold">Verification Code</label>
+                            <input type="text" class="form-control form-control-lg" id="otp" name="code"
+                                   placeholder="Enter 6-digit code" required maxlength="6">
+                            <small class="form-text text-muted">Check your email for the verification code.</small>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-lg w-100" id="verifyBtn" onclick="verify()">Verify</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="toggle-container">
@@ -79,7 +114,7 @@
             <div class="toggle-panel toggle-right">
                 <div class="content">
                     <h3>New to ForeverFloral?</h3>
-                    <p>Join us today to explore unique party themes, exclusive offers, and creative solutions to make every occasion extraordinary. Let’s create the perfect event together!</p>
+                    <p>Join us today to explore unique party themes, exclusive offers, and creative solutions to make every occasion extraordinary. Let's create the perfect event together!</p>
                     <button class="hidden btn" id="register">Sign Up</button>
                 </div>
                 <img src="../images/home1.jpg" alt="" class="image">
@@ -90,11 +125,15 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     const container = document.getElementById('container');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
+
     registerBtn.addEventListener('click', () => {
         container.classList.add('active');
     });
@@ -103,28 +142,25 @@
         container.classList.remove('active');
     });
 
-    $(document).ready(function () {
-        $("#registerForm").submit(function (event) {
+    $(document).ready(function() {
+        $("#registerForm").submit(function(event) {
             event.preventDefault();
 
-            const name = $("#usernameU").val()
-            const email = $("#emailU").val()
-            const password = $("#passwordU").val()
-            const confirmPassword = $("#confirmPasswordU").val()
-            const role = $("#role").val()
-
-            const user = {
-                name: name,
-                email: email,
-                password: password,
-                role: role
-            }
+            const name = $("#usernameU").val();
+            const email = $("#emailU").val();
+            const password = $("#passwordU").val();
+            const confirmPassword = $("#confirmPasswordU").val();
+            const role = $("#role").val();
 
             if (password !== confirmPassword) {
-                alert("Passwords do not match!");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Password Mismatch',
+                    text: 'Passwords do not match!'
+                });
                 return false;
             }
-            //ajax request
+
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/api/v1/user/register",
@@ -135,99 +171,164 @@
                     password: password,
                     role: role
                 }),
-                success: function (response) {
+                success: function(response) {
                     console.log(response);
-                    alert("Registration Successful!");
                     localStorage.setItem("token", response.data.token);
-                    window.location.href = "register.html";
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registration Successful!',
+                        text: 'Your account has been created successfully. A verification email has been sent to your email.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Verify Email',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const verificationModal = new bootstrap.Modal(document.getElementById('verificationModal'));
+                            verificationModal.show();
+                        }
+                    });
                 },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                    alert("Registration Failed!");
+                error: function(xhr) {
+                    let errorMessage = "Registration Failed!";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration Failed',
+                        text: errorMessage
+                    });
                 }
             });
-
-
-
         });
+
+        $("#loginForm").submit(function(event) {
+            event.preventDefault();
+
+            const email = $("#emailI").val();
+            const password = $("#passwordI").val();
+
+            if (!email || !password) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Missing Information',
+                    text: 'Please enter both email and password.'
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/v1/auth/authenticate",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+                success: function(response) {
+                    console.log(response);
+                    localStorage.setItem("token", response.data.token);
+
+                    try {
+                        const decoded = jwt_decode(response.data.token);
+                        console.log(decoded.role);
+
+                        if (decoded.role === "admin") {
+                            window.location.href = "adminDashboard.html";
+                        } else {
+                            window.location.href = "home.html";
+                        }
+                    } catch (e) {
+                        console.error("Error decoding token:", e);
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = "Login Failed!";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login Failed',
+                        text: errorMessage
+                    });
+                }
+            });
+        });
+
     });
-    document.getElementById("loginBtn").addEventListener("click", function (event) {
-        event.preventDefault();
+    function verify() {
+        const otp = $("#otp").val();
+        const token = localStorage.getItem("token");
 
-        const email = $("#emailI").val();
-        const password = $("#passwordI").val();
-
-        if (!email || !password) {
-            alert("Please enter both email and password.");
+        if (!token) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Session expired. Please log in again.'
+            });
             return;
         }
 
-        // Send login request
-        $.ajax({
-            type: "POST",
-            url: "http://localhost:8080/api/v1/auth/authenticate",
-            contentType: "application/json",
-            data: JSON.stringify({
-                email: email,
-                password: password
-            }),
-            success: function (response) {
-                console.log(response);
-                alert("Login Successful!");
-                localStorage.setItem("token", response.data.token);
-                const decoded = jwt_decode(response.data.token);
-                console.log(decoded.role)
+        try {
+            const decodedToken = jwt_decode(token);
+            const email = decodedToken.sub;
 
-                if(decoded.role === "admin"){
-                    console.log("Redirecting to admin dashboard");
-                    window.location.href = "adminDashboard.html";
-                }else{
-                    console.log("Redirecting to home page");
-                    window.location.href = "home.html";
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                alert("Login Failed: " + xhr.responseText);
+            if (!otp || otp.length !== 6) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Code',
+                    text: 'Please enter a valid 6-digit verification code.'
+                });
+                return;
             }
-        });
-    });
 
-    /*function getUser(email) {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/v1/verifyUser/verify",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    email: email,
+                    code: otp
+                }),
+                success: function(response) {
+                    if(response.code === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Verification Successful!',
+                            text: 'Your account has been verified successfully.'
+                        }).then(() => {
+                            const verificationModal = bootstrap.Modal.getInstance(document.getElementById('verificationModal'));
+                            verificationModal.hide();
 
-        $.ajax({
-            url: "http://localhost:8080/api/v1/user/getUser",
-            method: 'GET',
-            async: true,
-            contentType: 'application/json',
-            data: JSON.stringify({
-                email:email
-            }),
-            headers: {
-                Authorization: 'Bearer '+ localStorage.getItem("token")
-            },
-
-            success: function (response) {
-                console.log(response);
-
-                if (response.data.role === "admin") {
-                    console.log("Redirecting to admin dashboard");
-                    window.location.href = "adminDashboard.html";
-                } else {
-                    console.log("Redirecting to home page");
-                    window.location.href = "home.html";
+                            if (decodedToken.role === "admin") {
+                                window.location.href = "adminDashboard.html";
+                            } else {
+                                window.location.href = "home.html";
+                            }
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = "Verification Failed!";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Verification Failed',
+                        text: errorMessage
+                    });
                 }
-            },
-            error: function (xhr, status, error) {
-
-                alert("Failed to fetch user details: " + xhr.responseText);
-            }
-        });
-    }
-*/
-
-    function login(){
-
+            });
+        } catch (e) {
+            console.error("Error decoding token:", e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to process verification. Please try again.'
+            });
+        }
     }
 </script>
 

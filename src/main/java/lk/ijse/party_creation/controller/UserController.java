@@ -24,14 +24,14 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public ResponseEntity<ResponseDTO> getUser(@RequestParam String email) {
-        UserDTO userDTO = userService.searchUser(email);
+    public ResponseEntity<ResponseDTO> getUser(@RequestBody UserDTO userDTO) {
+        UserDTO userDTO1 = userService.searchUser(userDTO.getEmail());
         System.out.println("ndsfisjdifsn"+userDTO.getUserId());
         if (userDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseDTO(VarList.Not_Found, "User Not Found", null));
         }
-        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", userDTO));
+        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", userDTO1));
     }
 
 

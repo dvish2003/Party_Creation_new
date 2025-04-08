@@ -1,6 +1,7 @@
 package lk.ijse.party_creation.service.Impl;
 
 import jakarta.transaction.Transactional;
+import lk.ijse.party_creation.config.VerificationCodeGenerator;
 import lk.ijse.party_creation.dto.UserDTO;
 import lk.ijse.party_creation.entity.User;
 import lk.ijse.party_creation.repo.UserRepo;
@@ -27,6 +28,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private EmailService emailService;
+
 
     @Override
     public int saveUser(UserDTO userDTO) {
@@ -37,10 +41,46 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
             userDTO.setPassword(encodedPassword);  // Set the encoded password
+            String verificationCode = VerificationCodeGenerator.generateCode(6);
+
 
             // Save the user after mapping to the User entity
-            userRepo.save(modelMapper.map(userDTO, User.class));
+            User user = modelMapper.map(userDTO, User.class);
+            user.setVerificationCode(verificationCode);
+            user.setVerified(false);
+            userRepo.save(user);
+            emailService.sendVerificationEmail(user.getEmail(),user.getVerificationCode());
+
             return VarList.Created;  // User successfully created
+        }
+    }
+
+    @Override
+    public int verifyUser(String email, String code) {
+        if (email == null || email.trim().isEmpty() || code == null || code.trim().isEmpty()) {
+            return VarList.Bad_Request;
+        }
+
+        try {
+
+            User user = userRepo.findByEmail(email);
+            if (user == null) {
+                return VarList.Not_Found;
+            }
+            if (user.isVerified()) {
+                return VarList.Conflict;
+            }
+            if (user.getVerificationCode() == null || !user.getVerificationCode().equals(code)) {
+                return VarList.Unauthorized;
+            }
+            user.setVerificationCode(null);
+            user.setVerified(true);
+            userRepo.save(user);
+
+            return VarList.OK;
+
+        } catch (Exception e) {
+            return VarList.Internal_Server_Error;
         }
     }
 
